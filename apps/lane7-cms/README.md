@@ -10,7 +10,7 @@ This template can be deployed directly from our Cloud hosting and it will setup 
 
 To spin up this template locally, follow these steps:
 
-### Clone
+### Clone1
 
 After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
 
