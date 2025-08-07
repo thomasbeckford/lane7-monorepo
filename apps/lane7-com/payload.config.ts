@@ -63,14 +63,13 @@ export default buildConfig({
   },
 
   admin: {
+    importMap: {
+      baseDir: path.resolve(dirname)
+    },
     components: {
       logout: {
         Button: './payload/components/LogoutButton'
       }
-    },
-
-    importMap: {
-      baseDir: path.resolve(dirname)
     }
   },
 

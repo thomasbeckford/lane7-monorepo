@@ -1,4 +1,5 @@
 'use client';
+
 import { logoutAction } from '@/payload/actions/logout';
 
 export default function LogoutButton() {

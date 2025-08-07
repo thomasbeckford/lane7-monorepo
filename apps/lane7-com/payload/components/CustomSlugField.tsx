@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { TextInput, useField, useFormFields } from "@payloadcms/ui";
-import { useEffect, useRef } from "react";
+import { TextInput, useField, useFormFields } from '@payloadcms/ui';
+import { useEffect, useRef } from 'react';
 
 function formatSlug(val: string): string {
   return val
     .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "")
-    .replace(/--+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 const CustomSlugField = () => {
-  const { value: slugValue = "", setValue: setSlugValue } = useField<string>();
+  const { value: slugValue = '', setValue: setSlugValue } = useField<string>();
   const nameField = useFormFields(([fields]) => fields.name);
-  const nameValue = (nameField?.value as string) || "";
+  const nameValue = (nameField?.value as string) || '';
 
   const prevNameRef = useRef(nameValue);
   const stopTrackingRef = useRef(false);
@@ -26,7 +26,7 @@ const CustomSlugField = () => {
     const prevSlug = formatSlug(prevNameRef.current);
     prevNameRef.current = nameValue;
 
-    if (prevSlug !== slugValue && slugValue !== "") return;
+    if (prevSlug !== slugValue && slugValue !== '') return;
 
     setSlugValue(formatSlug(nameValue));
   }, [nameValue, slugValue, setSlugValue]);
