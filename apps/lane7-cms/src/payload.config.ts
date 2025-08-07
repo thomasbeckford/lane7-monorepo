@@ -98,7 +98,9 @@ export default buildConfig({
     'https://lane7.com', // production
     'https://www.lane7.com',
     'https://lane7.de',
-    'https://www.lane7.de'
+    'https://www.lane7.de',
+    'https://lane7-com.vercel.app',
+    'https://lane7-de.vercel.app'
   ],
 
   // CSRF - Same URLs para protección CSRF
@@ -109,6 +111,8 @@ export default buildConfig({
     'https://lane7.com',
     'https://www.lane7.com',
     'https://lane7.de',
-    'https://www.lane7.de'
+    'https://www.lane7.de',
+    'https://lane7-com.vercel.app',
+    'https://lane7-de.vercel.app'
   ]
 });
