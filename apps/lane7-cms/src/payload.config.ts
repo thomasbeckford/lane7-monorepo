@@ -89,7 +89,7 @@ export default buildConfig({
     declare: false
   },
 
-  secret: process.env.PAYLOAD_SECRET,
+  secret: process.env.PAYLOAD_SECRET || '',
   // CORS - URLs que pueden acceder a tu API
   cors: [
     getServerSideURL(), // URL del CMS
