@@ -1,0 +1,23 @@
+{
+  "name": "lane7-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:seed": "dotenv -e .env -- tsx payload/scripts/seedAllData.ts",
+    "db:reset": "npx payload migrate:fresh && pnpm run db:seed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@lane7/eslint-config": "workspace:*",
+    "@lane7/typescript-config": "workspace:*",
+    "dotenv-cli": "^10.0.0",
+    "turbo": "^2.5.5",
+    "typescript": "^5.9.2"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "pnpm@10.14.0"
+}

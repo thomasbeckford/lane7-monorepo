@@ -1,0 +1,9 @@
+{
+  "name": "@lane7/typescript-config",
+  "version": "0.0.0",
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "nextjs.json"
+  ]
+}
