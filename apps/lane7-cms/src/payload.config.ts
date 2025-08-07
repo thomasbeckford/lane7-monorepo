@@ -23,15 +23,6 @@ import { Settings } from './globals/Settings';
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-// Validar variables de entorno requeridas
-if (!process.env.PAYLOAD_SECRET) {
-  throw new Error('PAYLOAD_SECRET is required');
-}
-
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required');
-}
-
 const generateTitle: GenerateTitle<Venue> = ({ doc }) => {
   return doc?.name ? `${doc.name} | Payload Website Template` : 'Payload Website Template';
 };
