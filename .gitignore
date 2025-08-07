@@ -32,11 +32,6 @@ node_modules/.pnpm/
 **/build/
 **/dist/
 
-# Payload CMS generated files
-**/payload-types.ts
-**/importMap.js
-**/.payload/
-
 # Database
 *.db
 *.sqlite

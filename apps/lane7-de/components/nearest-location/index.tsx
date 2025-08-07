@@ -1,24 +1,23 @@
-"use client";
+'use client';
 
-import { useNearestLocations } from "@/components/nearest-location/useNearestLocations";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Loader2, MapPin, Navigation2 } from "lucide-react";
-import Link from "next/link";
+import { useNearestLocations } from '@/components/nearest-location/useNearestLocations';
+import { Badge } from '@lane7/ui/components/badge';
+import { Button } from '@lane7/ui/components/button';
+import { Loader2, MapPin, Navigation2 } from 'lucide-react';
+import Link from 'next/link';
 
 interface NavbarNearestLocationProps {
   className?: string;
   showLabel?: boolean;
-  variant?: "compact" | "minimal" | "badge";
+  variant?: 'compact' | 'minimal' | 'badge';
 }
 
 export default function NearestLocations({
-  className = "",
+  className = '',
   showLabel = true,
-  variant = "compact",
+  variant = 'compact'
 }: NavbarNearestLocationProps) {
-  const { nearestLocations, isLoading, error, hasUserLocation, userLocation } =
-    useNearestLocations();
+  const { nearestLocations, isLoading, error, hasUserLocation, userLocation } = useNearestLocations();
 
   const nearestLocation = nearestLocations[0];
 
@@ -26,27 +25,22 @@ export default function NearestLocations({
     return (
       <div className={`flex items-center gap-2 ${className}`}>
         <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-        {showLabel && (
-          <span className="text-sm text-muted-foreground">Searching...</span>
-        )}
+        {showLabel && <span className="text-sm text-muted-foreground">Searching...</span>}
       </div>
     );
   }
 
   if (error || !hasUserLocation || !nearestLocation) {
-    console.log("Error fetching nearest locations:", error);
-    console.log("hasUserLocation", hasUserLocation);
-    console.log("nearestLocation", nearestLocation);
+    console.log('Error fetching nearest locations:', error);
+    console.log('hasUserLocation', hasUserLocation);
+    console.log('nearestLocation', nearestLocation);
     return null;
   }
 
-  if (variant === "badge") {
+  if (variant === 'badge') {
     return (
       <Link href={`/locations/${nearestLocation.slug}`} className={className}>
-        <Badge
-          variant="secondary"
-          className="hover:bg-secondary/80 transition-colors cursor-pointer"
-        >
+        <Badge variant="secondary" className="hover:bg-secondary/80 transition-colors cursor-pointer">
           <MapPin className="w-3 h-3 mr-1" />
           {nearestLocation.formattedDistance}
         </Badge>
@@ -55,7 +49,7 @@ export default function NearestLocations({
   }
 
   // Variante Minimal - Solo icono y distancia
-  if (variant === "minimal") {
+  if (variant === 'minimal') {
     return (
       <Link href={`/locations/${nearestLocation.slug}`} className={className}>
         <Button variant="ghost" size="sm">
@@ -70,9 +64,7 @@ export default function NearestLocations({
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {showLabel && (
-        <span className="text-xs uppercase tracking-widest text-gray-500 hidden sm:inline font-medium">
-          Nearest
-        </span>
+        <span className="text-xs uppercase tracking-widest text-gray-500 hidden sm:inline font-medium">Nearest</span>
       )}
 
       <Link href={`/locations/${nearestLocation.slug}`}>
@@ -84,9 +76,7 @@ export default function NearestLocations({
             <MapPin className="w-4 h-4 text-fiveiron-lime group-hover:scale-105 transition-transform duration-150" />
 
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-medium text-white truncate">
-                {nearestLocation.name}
-              </span>
+              <span className="text-sm font-medium text-white truncate">{nearestLocation.name}</span>
               <span className="text-xs text-gray-400 bg-gray-800/60 px-2 py-0.5 rounded-full">
                 {nearestLocation.formattedDistance}
               </span>
