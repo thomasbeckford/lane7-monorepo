@@ -1,21 +1,21 @@
+import { DEFAULT_COUNTRY, getSupportedCountryKeys, isCountrySupported } from '@lane7/shared/config/countries';
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Países soportados en tu app
-const SUPPORTED_COUNTRIES = ['de', 'uk', 'nl', 'us', 'de'];
-const DEFAULT_COUNTRY = 'us';
-
 function getCountryCode(request: NextRequest): string {
   const { country } = geolocation(request);
-  const lower = country?.toLowerCase();
-  if (!lower) return DEFAULT_COUNTRY;
-  return SUPPORTED_COUNTRIES.includes(lower) ? lower : DEFAULT_COUNTRY;
+
+  if (!country) return DEFAULT_COUNTRY;
+
+  const countryLower = country.toLowerCase();
+  return isCountrySupported(countryLower) ? countryLower : DEFAULT_COUNTRY;
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const alreadyHasCountry = SUPPORTED_COUNTRIES.some(
+  // Check if URL already has a supported country code
+  const alreadyHasCountry = getSupportedCountryKeys().some(
     country => pathname.startsWith(`/${country}/`) || pathname === `/${country}`
   );
 
@@ -23,8 +23,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Get country code and redirect
   const countryCode = getCountryCode(request);
-
   const url = request.nextUrl.clone();
   url.pathname = `/${countryCode}${pathname}`;
 

@@ -1,14 +1,12 @@
 {
-  "extends": "../../packages/typescript-config/nextjs-payload.json",
+  "extends": "../../packages/typescript-config/nextjs.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"],
-      "@payload-config": ["./payload.config.ts"],
-      "@payload-types": ["./payload-types.ts"],
       "@lane7/ui/*": ["../../packages/ui/*"]
     },
     "allowJs": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "./payload/scripts/seedAllData.ts"]
+  "exclude": ["node_modules"]
 }

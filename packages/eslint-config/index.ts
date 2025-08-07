@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   extends: ['next/core-web-vitals', '@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],

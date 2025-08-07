@@ -1,26 +1,12 @@
-// payload/utilities/getPageBySlug.ts
 'use server';
 
-import { Config } from '@/payload-types';
-import config from '@/payload.config';
-import { getPayload } from 'payload';
+export const getVenueBySlug = async ({ slug, locale }: { slug?: string; locale?: string }) => {
+  console.log('GET VENUES', slug);
 
-export const getVenueBySlug = async ({ slug, locale }: { slug: string; locale: Config['locale'] }) => {
-  const payload = await getPayload({ config });
-  const venues = await payload.find({
-    collection: 'venues',
-    where: {
-      slug: {
-        equals: slug
-      },
-      status: {
-        equals: 'published'
-      }
-    },
-    locale
-  });
+  const response = await fetch(`http://localhost:3002/api/venue-by-slug?slug=${slug}&locale=${locale}`);
+  const venue = await response.json();
 
-  const venue = venues.docs[0];
+  console.log('VENUE', venue);
 
-  return venue;
+  return venue.venues;
 };

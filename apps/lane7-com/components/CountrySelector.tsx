@@ -1,6 +1,6 @@
 'use client';
 
-import { SUPPORTED_COUNTRIES } from '@/config/countries';
+import { SUPPORTED_COUNTRIES } from '@lane7/shared/config/countries';
 import { Badge } from '@lane7/ui/components/badge';
 import { Button } from '@lane7/ui/components/button';
 import {

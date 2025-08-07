@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Si ya tiene /de en la URL, no hacer nada
   if (pathname === '/de' || pathname.startsWith('/de/')) {
     return NextResponse.next();
   }
@@ -22,8 +21,3 @@ export const config = {
     '/((?!api|admin|_next/static|_next/image|favicon.ico|.*\\.).*)'
   ]
 };
-
-// Y podés eliminar estos archivos porque ya no los necesitás:
-// - config/locales.ts
-// - lib/locales.ts
-// - @vercel/functions dependency

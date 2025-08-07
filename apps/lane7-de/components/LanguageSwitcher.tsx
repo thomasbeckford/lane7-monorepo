@@ -1,6 +1,6 @@
 'use client';
 
-import { locales } from '@/config/locales';
+import { locales } from '@lane7/shared/config/locales';
 import { Badge } from '@lane7/ui/components/badge';
 import { Button } from '@lane7/ui/components/button';
 import {
@@ -24,7 +24,7 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
   const pathname = usePathname();
   const router = useRouter();
 
-  const currentLocaleData = locales.find(locale => locale.code === currentLocale && locale.isActive);
+  const currentLocaleData = locales.find(locale => locale.code === currentLocale);
 
   /**
    * Construye la URL para el nuevo idioma
@@ -61,9 +61,6 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
     router.push(newUrl);
   };
 
-  // Filtrar solo locales activos
-  const activeLocales = locales.filter(locale => locale.isActive);
-
   if (variant === 'pills') {
     return (
       <div
@@ -71,7 +68,7 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
         role="tablist"
         aria-label="Language selector"
       >
-        {activeLocales.map(locale => (
+        {locales.map(locale => (
           <Link
             key={locale.code}
             href={buildUrl(locale.code)}
@@ -85,9 +82,6 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
             title={`Switch to ${locale.name}`}
             aria-current={currentLocale === locale.code ? 'page' : undefined}
           >
-            <span className="text-base" aria-hidden="true">
-              {locale.flag}
-            </span>
             <span className="hidden sm:inline">{locale.name}</span>
             <span className="sm:hidden">{locale.code.toUpperCase()}</span>
           </Link>
@@ -99,7 +93,7 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
   if (variant === 'compact') {
     return (
       <div className={cn('flex items-center gap-1', className)} role="group" aria-label="Language selector">
-        {activeLocales.map(locale => (
+        {locales.map(locale => (
           <Link
             key={locale.code}
             href={buildUrl(locale.code)}
@@ -114,9 +108,6 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
                 currentLocale === locale.code && 'shadow-md'
               )}
             >
-              <span className="mr-1" aria-hidden="true">
-                {locale.flag}
-              </span>
               {locale.code.toUpperCase()}
             </Badge>
           </Link>
@@ -137,7 +128,6 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
         >
           <Globe className="h-4 w-4" aria-hidden="true" />
           <span className="flex items-center gap-1">
-            <span aria-hidden="true">{currentLocaleData?.flag}</span>
             <span className="hidden sm:inline">{currentLocaleData?.name}</span>
             <span className="sm:hidden">{currentLocale?.toUpperCase()}</span>
           </span>
@@ -145,7 +135,7 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[160px]">
-        {activeLocales.map(locale => (
+        {locales.map(locale => (
           <DropdownMenuItem key={locale.code} asChild>
             <Link
               href={buildUrl(locale.code)}
@@ -153,9 +143,6 @@ export function LanguageSwitcher({ currentLocale, className = '', variant = 'dro
               aria-current={currentLocale === locale.code ? 'page' : undefined}
             >
               <div className="flex items-center gap-2">
-                <span className="text-base" aria-hidden="true">
-                  {locale.flag}
-                </span>
                 <span>{locale.name}</span>
               </div>
               {currentLocale === locale.code && <Check className="h-4 w-4 text-primary" aria-hidden="true" />}

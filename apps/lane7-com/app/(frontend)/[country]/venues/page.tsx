@@ -178,13 +178,19 @@ const StatsSection = ({ totalVenues }: { totalVenues: number }) => {
 };
 
 // Main Component
-export default async function CountryVenuesPage() {
-  const country = 'de';
+export default async function CountryVenuesPage({ params }: { params: Promise<{ country: string }> }) {
+  const { country } = await params;
   const venues = await getVenues({ countryCode: country });
 
   console.log('VENUES', venues);
 
-  const countryName = country.toUpperCase();
+  // Obtener el nombre del país desde el primer venue (asumiendo que todos son del mismo país)
+  const countryName =
+    venues.length > 0 && venues[0].country
+      ? typeof venues[0].country === 'object' && 'name' in venues[0].country
+        ? venues[0].country
+        : venues[0].country
+      : country.toUpperCase();
 
   return (
     <div className="min-h-screen bg-black text-white">

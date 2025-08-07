@@ -1,0 +1,19 @@
+{
+  "name": "@lane7/shared",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./config/*": "./config/*.ts",
+    "./payload-types": "./payload-types.ts",
+    "./utilities/*": "./utilities/*.ts"
+  },
+  "files": [
+    "config",
+    "utilities",
+    "payload-types.ts"
+  ],
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@payloadcms/richtext-lexical": "^3.50.0"
+  }
+}
