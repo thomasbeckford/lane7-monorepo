@@ -5,7 +5,8 @@
   "exports": {
     "./config/*": "./config/*.ts",
     "./payload-types": "./payload-types.ts",
-    "./utilities/*": "./utilities/*.ts"
+    "./utilities/*": "./utilities/*.ts",
+    "./server/*": "./server/*.ts"
   },
   "files": [
     "config",

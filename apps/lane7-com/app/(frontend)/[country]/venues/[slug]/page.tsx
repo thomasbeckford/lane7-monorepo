@@ -1,5 +1,5 @@
-import { getVenueBySlug } from '@/server/getVenueBySlug';
 import { locales } from '@lane7/shared/config/locales';
+import { getVenueBySlug } from '@lane7/shared/server/getVenueBySlug';
 import { getClientSideURL } from '@lane7/shared/utilities/getURL';
 import RichText from '@lane7/shared/utilities/richText';
 import { Section } from '@lane7/ui/components/section';

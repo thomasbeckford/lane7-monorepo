@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload';
-import { admin, authenticated } from '../access';
+import { admin, authenticatedOrPublished } from '../access';
 
 export const Menus: CollectionConfig = {
   slug: 'menus',
@@ -9,7 +9,7 @@ export const Menus: CollectionConfig = {
   access: {
     create: admin,
     delete: admin,
-    read: authenticated,
+    read: authenticatedOrPublished,
     update: admin
   },
   fields: [

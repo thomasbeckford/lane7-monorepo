@@ -77,6 +77,7 @@ export default buildConfig({
       generateURL
     })
   ],
+  serverURL: process.env.NEXT_PUBLIC_PAYLOAD_SERVER_URL || 'http://localhost:3002',
 
   db: postgresAdapter({
     pool: {

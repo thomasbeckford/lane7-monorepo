@@ -20,7 +20,7 @@ export const authenticatedOrPublished: Access = ({ req: { user } }) => {
   }
 
   return {
-    _status: {
+    status: {
       equals: 'published'
     }
   };

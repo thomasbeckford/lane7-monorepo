@@ -1,5 +1,5 @@
-import { getVenues } from '@/server/getVenues';
 import { Venue } from '@lane7/shared/payload-types';
+import { getVenues } from '@lane7/shared/server/getVenues';
 import { Section, SectionDescription, SectionHeader, SectionTitle } from '@lane7/ui/components/section';
 import Link from 'next/link';
 
@@ -180,7 +180,7 @@ const StatsSection = ({ totalVenues }: { totalVenues: number }) => {
 // Main Component
 export default async function CountryVenuesPage() {
   const country = 'de';
-  const venues = await getVenues({ countryCode: country });
+  const { venues } = await getVenues({ countryCode: country });
 
   console.log('VENUES', venues);
 

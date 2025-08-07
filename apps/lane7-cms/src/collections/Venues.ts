@@ -3,7 +3,7 @@ import { SUPPORTED_COUNTRIES } from '@lane7/shared/config/countries';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { SlateToLexicalFeature } from '@payloadcms/richtext-lexical/migrate';
 import type { CollectionConfig } from 'payload';
-import { admin, authenticated } from '../access';
+import { admin, authenticatedOrPublished } from '../access';
 import { slugField } from '../components/fields/slugField';
 
 export const Venues: CollectionConfig = {
@@ -15,7 +15,7 @@ export const Venues: CollectionConfig = {
   access: {
     create: admin,
     delete: admin,
-    read: authenticated,
+    read: authenticatedOrPublished,
     update: admin
   },
 
