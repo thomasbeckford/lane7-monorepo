@@ -1,4 +1,5 @@
 import { Section } from '@/components/ui/section';
+import { getCountryData } from '@lane7/shared/config/countries';
 import { locales } from '@lane7/shared/config/locales';
 import { getVenueBySlug } from '@lane7/shared/server/getVenueBySlug';
 import { getClientSideURL } from '@lane7/shared/utilities/getURL';
@@ -11,16 +12,147 @@ import { notFound } from 'next/navigation';
 type Props = {
   params: Promise<{
     slug: string;
-    locale: string;
+    country: string;
   }>;
 };
 
-export default async function Page({ params }: Props) {
-  const { slug, locale } = await params;
+// AI SEO Content Component
+const AIOptimizedContent = ({ venue, country }: { venue: any; country: string }) => {
+  const countryData = getCountryData(country);
 
-  const venue = await getVenueBySlug({ slug, locale });
-  console.log(`🔍 Venue loaded at: ${new Date().toISOString()}`);
-  console.log(`📄 Venue data:`, venue?.name);
+  return (
+    <section className="py-20 px-6 bg-gray-900">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-black text-center mb-8">
+          About Lane7 {countryData?.name || venue.city}
+        </h2>
+        <div className="prose prose-lg mx-auto text-center text-white">
+          <p className="text-xl mb-6">
+            Lane7 {countryData?.name || venue.city} is a premium entertainment venue in {venue.city} offering bowling
+            from £15, pool from £8, and karaoke from £12. Our modern facilities feature state-of-the-art equipment, full
+            bar service, and professional event coordination.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-lime-400 mb-2">Premium Gaming</h3>
+              <p className="text-gray-300">Modern bowling lanes, professional pool tables, private karaoke rooms</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-lime-400 mb-2">Perfect Location</h3>
+              <p className="text-gray-300">Conveniently located in {venue.city} with excellent transport links</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-lime-400 mb-2">Full Service</h3>
+              <p className="text-gray-300">Complete bar service, food options, and event coordination</p>
+            </div>
+          </div>
+
+          {venue.services?.hasGroupBookings && (
+            <div className="mt-8 p-6 bg-lime-400/10 rounded-lg">
+              <h3 className="text-xl font-bold text-lime-400 mb-3">Corporate Events & Group Bookings</h3>
+              <p className="text-gray-300">
+                Lane7 {countryData?.name || venue.city} specializes in corporate events, team building activities, and
+                group celebrations. We offer dedicated event packages, private venue hire, and professional coordination
+                for groups of all sizes.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Enhanced FAQ Component
+const EnhancedFAQSection = ({ venue }: { venue: any }) => {
+  const getPlainTextFromRichText = (richText: any): string => {
+    if (!richText?.root?.children) return '';
+    const extractText = (children: any[]): string => {
+      return children
+        .map(child => {
+          if (child.type === 'text') return child.text || '';
+          if (child.children) return extractText(child.children);
+          return '';
+        })
+        .join('');
+    };
+    return extractText(richText.root.children).trim();
+  };
+
+  // Add venue-specific FAQs for AI SEO
+  const additionalFAQs = [
+    {
+      question: `What games are available at Lane7 ${venue.locationSpecifier || venue.city}?`,
+      answer: `Lane7 ${
+        venue.locationSpecifier || venue.city
+      } offers bowling from £15, pool from £8, and karaoke from £12. All games include access to premium equipment and facilities with full bar service.`
+    },
+    {
+      question: `Where is Lane7 ${venue.locationSpecifier || venue.city} located?`,
+      answer: `Lane7 ${venue.locationSpecifier || venue.city} is located at ${
+        venue.location?.address || venue.city
+      }. We're easily accessible by public transport and offer the complete Lane7 entertainment experience.`
+    },
+    ...(venue.services?.hasGroupBookings
+      ? [
+          {
+            question: `Does Lane7 ${venue.locationSpecifier || venue.city} host corporate events?`,
+            answer: `Yes, Lane7 ${
+              venue.locationSpecifier || venue.city
+            } specializes in corporate events, team building activities, and group bookings. We offer dedicated event packages and professional coordination.`
+          }
+        ]
+      : []),
+    ...(venue.openingHours && venue.openingHours.length > 0
+      ? [
+          {
+            question: `What are Lane7 ${venue.locationSpecifier || venue.city} opening hours?`,
+            answer: `Lane7 ${venue.locationSpecifier || venue.city} opening hours: ${venue.openingHours
+              .map((h: any) => `${h.days}: ${h.hours}`)
+              .join(', ')}. Check our website for holiday hours and special events.`
+          }
+        ]
+      : [])
+  ];
+
+  const allFAQs = [...(venue.faqs || []), ...additionalFAQs];
+
+  if (allFAQs.length === 0) return null;
+
+  return (
+    <section className="py-20 px-4 bg-gray-50">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-black text-black text-center mb-12">
+          Lane7 {venue.locationSpecifier || venue.city} - Frequently Asked Questions
+        </h2>
+
+        <div className="space-y-8">
+          {allFAQs.map((faq: any, index: number) => (
+            <article key={index}>
+              <h3 className="text-xl font-bold mb-3 text-black">{faq.question}</h3>
+              <div className="text-gray-700">
+                {typeof faq.answer === 'string' ? (
+                  <p>{faq.answer}</p>
+                ) : (
+                  <div className="prose prose-gray max-w-none">
+                    <RichText data={faq.answer} />
+                  </div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default async function Page({ params }: Props) {
+  const { slug, country } = await params;
+
+  const venue = await getVenueBySlug({ slug, country });
+  const countryData = getCountryData(country);
 
   if (!venue) {
     notFound();
@@ -34,7 +166,7 @@ export default async function Page({ params }: Props) {
           <div className="absolute inset-0 z-0">
             <Image
               src={venue.hero.backgroundImage.url!}
-              alt={venue.hero?.title || venue.name}
+              alt={`Lane7 ${countryData?.name || venue.city} interior showing bowling, pool and karaoke facilities`}
               fill
               className="object-cover"
               priority
@@ -45,7 +177,7 @@ export default async function Page({ params }: Props) {
 
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
           <h1 className="text-6xl md:text-8xl font-black uppercase tracking-wider mb-6">
-            {venue.hero?.title || `${venue.name} ${venue.locationSpecifier ? venue.locationSpecifier : ''}`}
+            {venue.hero?.title || `Lane7 ${venue.locationSpecifier || venue.city}`}
           </h1>
 
           {venue.hero?.subtitle ? <p className="text-xl md:text-2xl mb-8 opacity-90">{venue.hero.subtitle}</p> : null}
@@ -57,6 +189,9 @@ export default async function Page({ params }: Props) {
           ) : null}
         </div>
       </Section>
+
+      {/* AI SEO Content Section */}
+      <AIOptimizedContent venue={venue} country={country} />
 
       {/* Games Section */}
       {venue.availableGames && venue.availableGames.length > 0 && (
@@ -81,7 +216,7 @@ export default async function Page({ params }: Props) {
                     <div className="aspect-video relative overflow-hidden">
                       <Image
                         src={game.images[0].image.url!}
-                        alt={game.images[0].alt || game.name}
+                        alt={`${game.name} at Lane7 ${countryData?.name || venue.city}`}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
@@ -125,7 +260,7 @@ export default async function Page({ params }: Props) {
           <div className="flex flex-wrap gap-4 justify-center mb-12">
             {venue.foodMenu && (
               <Link
-                href={`/${locale}/${slug}/menu/food`}
+                href={`/${country}/${slug}/menu/food`}
                 className="bg-white/20 hover:bg-white/30 px-8 py-3 rounded border-2 border-white/30 hover:border-white/50 transition-all font-bold uppercase tracking-wider"
               >
                 FOOD MENU
@@ -133,14 +268,14 @@ export default async function Page({ params }: Props) {
             )}
             {venue.drinksMenu && (
               <Link
-                href={`/${locale}/${slug}/menu/drinks`}
+                href={`/${country}/${slug}/menu/drinks`}
                 className="bg-white/20 hover:bg-white/30 px-8 py-3 rounded border-2 border-white/30 hover:border-white/50 transition-all font-bold uppercase tracking-wider"
               >
                 DRINKS MENU
               </Link>
             )}
             <Link
-              href={`/${locale}/${slug}/book`}
+              href={`/${country}/${slug}/book`}
               className="bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-3 rounded border-2 border-yellow-400 hover:border-yellow-300 transition-all font-bold uppercase tracking-wider"
             >
               BOOK NOW
@@ -160,7 +295,7 @@ export default async function Page({ params }: Props) {
                     the party.
                   </p>
                   <Link
-                    href={`/${locale}/${slug}/groups`}
+                    href={`/${country}/${slug}/groups`}
                     className="inline-block bg-white/20 hover:bg-white/30 px-6 py-2 rounded border border-white/30 hover:border-white/50 transition-all font-bold uppercase tracking-wide text-sm"
                   >
                     FIND OUT MORE
@@ -181,7 +316,7 @@ export default async function Page({ params }: Props) {
                     nights out in one.
                   </p>
                   <Link
-                    href={`/${locale}/${slug}/vouchers`}
+                    href={`/${country}/${slug}/vouchers`}
                     className="inline-block bg-white/20 hover:bg-white/30 px-6 py-2 rounded border border-white/30 hover:border-white/50 transition-all font-bold uppercase tracking-wide text-sm"
                   >
                     VIEW VOUCHERS
@@ -260,7 +395,7 @@ export default async function Page({ params }: Props) {
                 <h3 className="text-2xl font-bold mb-4">Ready to Play?</h3>
                 <p className="mb-6 opacity-90">Book your lane or just walk in and start playing!</p>
                 <Link
-                  href={`/${locale}/${slug}/book`}
+                  href={`/${country}/${slug}/book`}
                   className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 rounded font-bold uppercase tracking-wider transition-all text-lg"
                 >
                   BOOK NOW
@@ -271,51 +406,30 @@ export default async function Page({ params }: Props) {
         </div>
       </Section>
 
-      {/* FAQs Section */}
-      {venue.faqs && venue.faqs.length > 0 && (
-        <section className="py-20 px-4 bg-white/5">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-black uppercase tracking-wider mb-12 text-center">FAQS</h2>
-
-            <div className="space-y-6">
-              {venue.faqs.map((faq: any, index: number) => (
-                <details key={index} className="group border-b border-white/20 pb-6">
-                  <summary className="flex items-center justify-between cursor-pointer py-4 text-xl font-bold hover:text-yellow-400 transition-colors">
-                    <span>{faq.question}</span>
-                    <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
-                  </summary>
-                  <div className="pt-4 prose prose-invert max-w-none">
-                    <RichText data={faq.answer} />
-                  </div>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Enhanced FAQ Section */}
+      <EnhancedFAQSection venue={venue} />
     </div>
   );
 }
 
-// Metadata function remains the same as before
+// Enhanced Metadata with AI SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug, locale } = await params;
+  const { slug, country } = await params;
   const url = getClientSideURL();
-
-  const venue = await getVenueBySlug({ slug, locale });
+  const venue = await getVenueBySlug({ slug, country });
+  const countryData = getCountryData(country);
 
   if (!venue) {
     notFound();
   }
 
-  const venueUrl = `${url}/${locale}/${slug}`;
+  const venueUrl = `${url}/${country}/${slug}`;
   const metaImage = venue.hero?.backgroundImage;
   const imageUrl =
     metaImage && typeof metaImage === 'object' && metaImage.url ? `${url}${metaImage.url}` : `${url}/og-default.jpg`;
 
   const getPlainTextFromRichText = (richText: any): string => {
     if (!richText?.root?.children) return '';
-
     const extractText = (children: any[]): string => {
       return children
         .map(child => {
@@ -325,13 +439,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         })
         .join('');
     };
-
     return extractText(richText.root.children).trim();
   };
 
-  const description = venue.hero?.description
-    ? getPlainTextFromRichText(venue.hero.description)
-    : `${venue.name} - Experience bowling, games, and great food in ${venue.city}`;
+  // AI SEO optimized description
+  const heroDescription = venue.hero?.description ? getPlainTextFromRichText(venue.hero.description) : '';
+  const aiOptimizedDescription =
+    heroDescription ||
+    `Lane7 ${
+      venue.locationSpecifier || venue.city
+    } offers premium bowling from £15, pool from £8, and karaoke from £12. Located in ${
+      venue.city
+    } with full bar service, perfect for corporate events and group celebrations.`;
 
   const languages: Record<string, string> = {};
   Object.values(locales).forEach(code => {
@@ -339,10 +458,113 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   languages['x-default'] = `${url}/en/${slug}`;
 
+  // Enhanced structured data for AI SEO
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'EntertainmentBusiness',
+    '@id': venueUrl,
+    name: `Lane7 ${venue.locationSpecifier || venue.city}`,
+    description: aiOptimizedDescription,
+    url: venueUrl,
+    image: imageUrl,
+    priceRange: '£8-£15',
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: `${venue.locationSpecifier || venue.city} Games & Activities`,
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          name: 'Bowling',
+          price: '£15',
+          description: 'Premium bowling lanes with modern scoring systems'
+        },
+        {
+          '@type': 'Offer',
+          name: 'Pool',
+          price: '£8',
+          description: 'Professional pool tables in stylish setting'
+        },
+        {
+          '@type': 'Offer',
+          name: 'Karaoke',
+          price: '£12',
+          description: 'Private karaoke rooms with full bar service'
+        }
+      ]
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: venue.location?.address,
+      addressLocality: venue.city,
+      addressCountry: venue.country === 'uk' ? 'GB' : venue.country === 'de' ? 'DE' : 'IE'
+    },
+    telephone: venue.location?.phone,
+    email: venue.location?.email,
+    openingHoursSpecification: venue.openingHours?.map((hours: any) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: hours.days,
+      opens: hours.hours?.split(' - ')[0],
+      closes: hours.hours?.split(' - ')[1]
+    })),
+    amenityFeature: [
+      { '@type': 'LocationFeatureSpecification', name: 'Bowling Lanes', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Pool Tables', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Karaoke Rooms', value: true },
+      { '@type': 'LocationFeatureSpecification', name: 'Full Bar Service', value: true },
+      ...(venue.services?.hasGroupBookings
+        ? [{ '@type': 'LocationFeatureSpecification', name: 'Corporate Events', value: true }]
+        : []),
+      ...(venue.services?.hasGiftVouchers
+        ? [{ '@type': 'LocationFeatureSpecification', name: 'Gift Vouchers', value: true }]
+        : [])
+    ],
+    inLanguage: country,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Lane7',
+      url: url
+    },
+    datePublished: venue.createdAt,
+    dateModified: venue.updatedAt
+  };
+
+  // FAQ Schema if FAQs exist
+  const additionalFAQs = [
+    {
+      question: `What games are available at Lane7 ${venue.locationSpecifier || venue.city}?`,
+      answer: `Lane7 ${
+        venue.locationSpecifier || venue.city
+      } offers bowling from £15, pool from £8, and karaoke from £12. All games include access to premium equipment and facilities.`
+    },
+    {
+      question: `Where is Lane7 ${venue.locationSpecifier || venue.city} located?`,
+      answer: `Lane7 ${venue.locationSpecifier || venue.city} is located at ${
+        venue.location?.address || venue.city
+      }. We're easily accessible and offer the complete Lane7 experience.`
+    }
+  ];
+
+  const allFAQs = [...(venue.faqs || []), ...additionalFAQs];
+  const faqSchema =
+    allFAQs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: allFAQs.map((faq: any) => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: typeof faq.answer === 'string' ? faq.answer : getPlainTextFromRichText(faq.answer)
+            }
+          }))
+        }
+      : null;
+
   return {
-    title:
-      venue.hero?.title || `${venue.name} ${venue.locationSpecifier ? `- ${venue.locationSpecifier}` : ''} - Lane7`,
-    description,
+    title: `Lane7 ${venue.locationSpecifier || venue.city} - Bowling, Pool & Karaoke | ${venue.city}`,
+    description: aiOptimizedDescription,
+    keywords: `Lane7 ${venue.city}, bowling ${venue.city}, pool ${venue.city}, karaoke ${venue.city}, entertainment venue ${venue.city}, corporate events ${venue.city}`,
 
     alternates: {
       canonical: venueUrl,
@@ -351,8 +573,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     openGraph: {
       type: 'website',
-      title: venue.hero?.title || venue.name,
-      description,
+      title: `Lane7 ${venue.locationSpecifier || venue.city} - Premium Entertainment`,
+      description: aiOptimizedDescription,
       url: venueUrl,
       siteName: 'Lane7',
       images: [
@@ -360,16 +582,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: venue.hero?.title || venue.name
+          alt: `Lane7 ${venue.locationSpecifier || venue.city} interior showing bowling, pool and karaoke facilities`
         }
       ],
-      locale
+      locale: country
     },
 
     twitter: {
       card: 'summary_large_image',
-      title: venue.hero?.title || venue.name,
-      description,
+      title: `Lane7 ${venue.locationSpecifier || venue.city}`,
+      description: aiOptimizedDescription,
       images: [imageUrl],
       creator: '@lane7',
       site: '@lane7'
@@ -381,37 +603,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
 
     other: {
-      'application/ld+json': JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'LocalBusiness',
-        '@id': venueUrl,
-        name: venue.name,
-        description,
-        url: venueUrl,
-        image: imageUrl,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: venue.location?.address,
-          addressLocality: venue.city,
-          addressCountry: venue.country
-        },
-        telephone: venue.location?.phone,
-        email: venue.location?.email,
-        openingHoursSpecification: venue.openingHours?.map((hours: any) => ({
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: hours.days,
-          opens: hours.hours?.split(' - ')[0],
-          closes: hours.hours?.split(' - ')[1]
-        })),
-        inLanguage: locale,
-        publisher: {
-          '@type': 'Organization',
-          name: 'Lane7',
-          url: url
-        },
-        datePublished: venue.createdAt,
-        dateModified: venue.updatedAt
-      })
+      // Enhanced structured data using Next.js metadata API
+      'script:ld+json:venue': JSON.stringify(structuredData),
+      // FAQ schema if it exists
+      ...(faqSchema && { 'script:ld+json:faq': JSON.stringify(faqSchema) })
     }
   };
 }

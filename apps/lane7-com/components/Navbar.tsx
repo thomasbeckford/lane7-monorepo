@@ -1,8 +1,10 @@
-// components/Navbar.tsx - Lane7 Style Navbar
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, MapPin, Menu } from 'lucide-react';
+import { Calendar, MapPin, Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 // Datos de navegación centralizados
 const NAV_ITEMS = [
@@ -16,28 +18,41 @@ const NAV_ITEMS = [
 const NavLink = ({
   href,
   children,
-  className = ''
+  className = '',
+  onClick
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) => (
   <Link
     href={href}
+    onClick={onClick}
     className={`text-white hover:text-lime-400 transition-colors font-bold uppercase tracking-wide text-sm ${className}`}
   >
     {children}
   </Link>
 );
 
-export async function Navbar() {
+export function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gray-800">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
+            <Link href="/" className="flex items-center space-x-3 group" onClick={closeMobileMenu}>
               <div className="relative">
                 <div className="w-12 h-12 bg-lime-400 rounded-sm flex items-center justify-center group-hover:bg-lime-500 transition-colors">
                   <span className="text-black font-black text-2xl">L7</span>
@@ -87,18 +102,32 @@ export async function Navbar() {
               </Button>
 
               {/* Mobile Menu Button */}
-              <Button variant="ghost" size="sm" className="lg:hidden text-white hover:bg-gray-800 p-2">
-                <Menu className="w-6 h-6" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="lg:hidden text-white hover:bg-gray-800 p-2"
+                onClick={toggleMobileMenu}
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </Button>
             </div>
           </div>
 
           {/* Mobile Menu */}
-          <div className="lg:hidden border-t border-gray-800">
+          <div
+            className={`lg:hidden border-t border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+              isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
             <div className="py-6 space-y-4">
               {NAV_ITEMS.map(({ href, label }) => (
                 <div key={href} className="block">
-                  <NavLink href={href} className="block py-2 text-lg">
+                  <NavLink
+                    href={href}
+                    className="block py-2 text-lg hover:pl-2 transition-all"
+                    onClick={closeMobileMenu}
+                  >
                     {label}
                   </NavLink>
                 </div>
@@ -106,7 +135,7 @@ export async function Navbar() {
 
               {/* Mobile Find Venue */}
               <div className="pt-4 border-t border-gray-800">
-                <Link href="/venues">
+                <Link href="/venues" onClick={closeMobileMenu}>
                   <Button
                     variant="outline"
                     className="w-full border-2 border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-wide mb-3"
@@ -128,7 +157,17 @@ export async function Navbar() {
 }
 
 // Versión con Christmas Banner (opcional)
-export async function NavbarWithPromo() {
+export function NavbarWithPromo() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       {/* Christmas Promo Banner */}
@@ -146,7 +185,7 @@ export async function NavbarWithPromo() {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
+            <Link href="/" className="flex items-center space-x-3 group" onClick={closeMobileMenu}>
               <div className="relative">
                 <div className="w-12 h-12 bg-lime-400 rounded-sm flex items-center justify-center group-hover:bg-lime-500 transition-colors">
                   <span className="text-black font-black text-2xl">L7</span>
@@ -193,25 +232,39 @@ export async function NavbarWithPromo() {
                 <span className="sm:hidden">Book</span>
               </Button>
 
-              <Button variant="ghost" size="sm" className="lg:hidden text-white hover:bg-gray-800 p-2">
-                <Menu className="w-6 h-6" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="lg:hidden text-white hover:bg-gray-800 p-2"
+                onClick={toggleMobileMenu}
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </Button>
             </div>
           </div>
 
           {/* Mobile Menu */}
-          <div className="lg:hidden border-t border-gray-800">
+          <div
+            className={`lg:hidden border-t border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+              isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
             <div className="py-6 space-y-4">
               {NAV_ITEMS.map(({ href, label }) => (
                 <div key={href} className="block">
-                  <NavLink href={href} className="block py-2 text-lg">
+                  <NavLink
+                    href={href}
+                    className="block py-2 text-lg hover:pl-2 transition-all"
+                    onClick={closeMobileMenu}
+                  >
                     {label}
                   </NavLink>
                 </div>
               ))}
 
               <div className="pt-4 border-t border-gray-800">
-                <Link href="/venues">
+                <Link href="/venues" onClick={closeMobileMenu}>
                   <Button
                     variant="outline"
                     className="w-full border-2 border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-wide mb-3"

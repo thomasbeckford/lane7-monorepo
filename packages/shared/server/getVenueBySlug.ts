@@ -5,7 +5,7 @@ import { getServerSideURL } from '@lane7/shared/utilities/getURL';
 /**
  * Fetches a venue by slug with improved error handling and type safety
  */
-export const getVenueBySlug = async ({ slug, locale }: { slug: string; locale?: string }) => {
+export const getVenueBySlug = async ({ slug, country }: { slug: string; country?: string }) => {
   // Input validation
   if (!slug?.trim()) {
     console.warn('getVenueBySlug: No slug provided');
@@ -23,13 +23,13 @@ export const getVenueBySlug = async ({ slug, locale }: { slug: string; locale?: 
     });
 
     // Add locale if provided
-    if (locale) {
-      params.set('locale', locale);
+    if (country) {
+      params.set('locale', country);
     }
 
     const fullUrl = `${url}/api/venues?${params.toString()}`;
 
-    console.log(`🔍 Fetching venue: ${slug} (locale: ${locale || 'default'})`);
+    console.log(`🔍 Fetching venue: ${slug} (locale: ${country || 'default'})`);
 
     const response = await fetch(fullUrl, {
       headers: {
@@ -74,7 +74,7 @@ export const getVenueBySlug = async ({ slug, locale }: { slug: string; locale?: 
     console.error(`💥 Error fetching venue ${slug}:`, error);
 
     // In production, you might want to log to an error tracking service
-    // logError('getVenueBySlug', error, { slug, locale });
+    // logError('getVenueBySlug', error, { slug, country });
 
     // Return null instead of throwing to allow graceful degradation
     return null;
