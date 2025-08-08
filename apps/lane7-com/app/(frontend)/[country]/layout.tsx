@@ -1,19 +1,16 @@
 // app/[locale]/layout.tsx
+'use client';
 
 import { Navbar } from '@/components/Navbar';
-import type { Metadata } from 'next';
+import { initMixpanel, trackPageView } from '@/lib/mixpanelClient';
 import { Inter } from 'next/font/google';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import '../../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Lane7 - Bowling, Pool & Karaoke Venues | London, Manchester, Berlin, Dublin',
-  description:
-    'Lane7 offers bowling, pool and karaoke in premium venues across London, Manchester, Berlin and Dublin. Perfect for corporate events, parties and team building.'
-};
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params
 }: {
@@ -22,11 +19,18 @@ export default async function RootLayout({
     locale: string;
   }>;
 }) {
-  const resolvedParams = await params;
-  const { locale } = resolvedParams;
+  const pathname = usePathname();
+
+  useEffect(() => {
+    initMixpanel(); // Inicializar Mixpanel
+  }, []);
+
+  useEffect(() => {
+    trackPageView(pathname); // Trackear cada cambio de página
+  }, [pathname]);
 
   return (
-    <html lang={locale}>
+    <html lang="en">
       <body className={`${inter.className} dark`}>
         <Navbar />
         <main>{children}</main>

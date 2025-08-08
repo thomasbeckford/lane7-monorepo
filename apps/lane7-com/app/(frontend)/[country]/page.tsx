@@ -137,8 +137,6 @@ const faqSchema = {
 };
 
 export default async function HomePageGlobal({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-
   return (
     <div className="min-h-screen">
       {/* Schema.org JSON-LD */}
