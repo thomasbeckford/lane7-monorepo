@@ -2,54 +2,60 @@
 export type SupportedCountry = {
   name: string;
   defaultLocale: string;
-  code: CountryCode;
   flag: string;
   ccTLD?: string;
   cities?: string[];
 };
 
 export enum CountryCode {
-  UK = 'UK',
-  DE = 'DE',
-  IE = 'IE',
-  NL = 'NL'
+  UK = 'uk',
+  DE = 'de',
+  IE = 'ie',
+  NL = 'nl'
 }
 
-export const SUPPORTED_COUNTRIES: Record<string, SupportedCountry> = {
-  uk: {
+export const SUPPORTED_COUNTRIES = {
+  [CountryCode.UK]: {
     name: 'United Kingdom',
     defaultLocale: 'en',
-    code: CountryCode.UK,
     flag: '🇬🇧',
     cities: ['London', 'Manchester']
   },
-  de: {
+  [CountryCode.DE]: {
     name: 'Germany',
     defaultLocale: 'de',
-    code: CountryCode.DE,
     flag: '🇩🇪',
     cities: ['Berlin', 'Hamburg', 'Munich']
   },
-  ie: {
+  [CountryCode.IE]: {
     name: 'Ireland',
     defaultLocale: 'en',
-    code: CountryCode.IE,
     flag: '🇮🇪',
     cities: ['Dublin', 'Cork']
   },
-  nl: {
+  [CountryCode.NL]: {
     name: 'Netherlands',
     defaultLocale: 'nl',
-    code: CountryCode.NL,
     flag: '🇳🇱',
     cities: ['Amsterdam']
   }
-};
+} as const satisfies Record<CountryCode, SupportedCountry>;
 
-export const DEFAULT_COUNTRY = 'uk';
+export const DEFAULT_COUNTRY = CountryCode.UK;
 
-// Utility functions
-export const getSupportedCountryKeys = (): string[] => Object.keys(SUPPORTED_COUNTRIES);
+// Cache computed values for better performance
+const SUPPORTED_COUNTRY_KEYS = Object.keys(SUPPORTED_COUNTRIES) as CountryCode[];
+const SUPPORTED_COUNTRY_KEYS_SET = new Set(SUPPORTED_COUNTRY_KEYS);
 
-export const isCountrySupported = (country: string): boolean =>
-  getSupportedCountryKeys().includes(country.toLowerCase());
+// Optimized utility functions
+export const getSupportedCountryKeys = (): readonly CountryCode[] => SUPPORTED_COUNTRY_KEYS;
+
+export const isCountrySupported = (country: string): country is CountryCode =>
+  SUPPORTED_COUNTRY_KEYS_SET.has(country.toLowerCase() as CountryCode);
+
+// Helper to get country data safely
+export const getCountryData = (countryCode: string): SupportedCountry | null =>
+  SUPPORTED_COUNTRIES[countryCode as CountryCode] || null;
+
+// Type helpers
+export type SupportedCountryKey = keyof typeof SUPPORTED_COUNTRIES;

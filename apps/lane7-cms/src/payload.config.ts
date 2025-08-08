@@ -13,6 +13,7 @@ import { Users } from './collections/Users';
 import { Venues } from './collections/Venues';
 
 // Globals
+import { getAllowedUrls } from '@/config/urls';
 import { defaultLocale, locales } from '@lane7/shared/config/locales';
 import { getServerSideURL } from '@lane7/shared/utilities/getURL';
 import { seoPlugin } from '@payloadcms/plugin-seo';
@@ -91,29 +92,8 @@ export default buildConfig({
   },
 
   secret: process.env.PAYLOAD_SECRET || '',
-  // CORS - URLs que pueden acceder a tu API
-  cors: [
-    getServerSideURL(), // URL del CMS
-    'http://localhost:3000', // lane7-com dev
-    'http://localhost:3001', // lane7-de dev
-    'https://lane7.com', // production
-    'https://www.lane7.com',
-    'https://lane7.de',
-    'https://www.lane7.de',
-    'https://lane7-com.vercel.app',
-    'https://lane7-de.vercel.app'
-  ],
 
-  // CSRF - Same URLs para protección CSRF
-  csrf: [
-    getServerSideURL(),
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://lane7.com',
-    'https://www.lane7.com',
-    'https://lane7.de',
-    'https://www.lane7.de',
-    'https://lane7-com.vercel.app',
-    'https://lane7-de.vercel.app'
-  ]
+  // CORS - URLs que pueden acceder a tu API
+  cors: getAllowedUrls(),
+  csrf: getAllowedUrls()
 });

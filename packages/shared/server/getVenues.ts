@@ -58,7 +58,7 @@ export const getVenues = async ({
         revalidate: 600, // 10 minutes cache (venues change less frequently)
         tags: ['venues', ...(countryCode ? [`venues-${countryCode}`] : [])]
       }
-    });
+    } as any);
 
     if (!response.ok) {
       console.error(`❌ Failed to fetch venues:`, {

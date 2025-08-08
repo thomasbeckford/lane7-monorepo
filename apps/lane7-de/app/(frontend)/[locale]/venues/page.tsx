@@ -1,6 +1,6 @@
+import { Section, SectionDescription, SectionHeader, SectionTitle } from '@/components/ui/section';
 import { Venue } from '@lane7/shared/payload-types';
 import { getVenues } from '@lane7/shared/server/getVenues';
-import { Section, SectionDescription, SectionHeader, SectionTitle } from '@lane7/ui/components/section';
 import Link from 'next/link';
 
 // Types

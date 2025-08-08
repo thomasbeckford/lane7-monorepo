@@ -41,7 +41,7 @@ export const getVenueBySlug = async ({ slug, locale }: { slug: string; locale?: 
         revalidate: 300, // 5 minutes cache
         tags: [`venue-${slug}`] // For on-demand revalidation
       }
-    });
+    } as any);
 
     if (!response.ok) {
       console.error(`❌ Failed to fetch venue ${slug}:`, {

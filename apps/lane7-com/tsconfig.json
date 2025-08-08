@@ -2,8 +2,7 @@
   "extends": "../../packages/typescript-config/nextjs.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"],
-      "@lane7/ui/*": ["../../packages/ui/*"]
+      "@/*": ["./*"]
     },
     "allowJs": true
   },

@@ -44,7 +44,6 @@
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.6",
     "typescript": "^5.9.2",
-    "@lane7/ui": "workspace:*",
     "@lane7/shared": "workspace:*",
     "@lane7/eslint-config": "workspace:*",
     "@lane7/typescript-config": "workspace:*"

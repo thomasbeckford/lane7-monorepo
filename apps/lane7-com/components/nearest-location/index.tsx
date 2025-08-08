@@ -1,8 +1,8 @@
 'use client';
 
 import { useNearestLocations } from '@/components/nearest-location/useNearestLocations';
-import { Badge } from '@lane7/ui/components/badge';
-import { Button } from '@lane7/ui/components/button';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Loader2, MapPin, Navigation2 } from 'lucide-react';
 import Link from 'next/link';
 

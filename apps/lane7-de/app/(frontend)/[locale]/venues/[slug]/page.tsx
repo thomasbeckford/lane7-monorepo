@@ -1,8 +1,8 @@
+import { Section } from '@/components/ui/section';
 import { locales } from '@lane7/shared/config/locales';
 import { getVenueBySlug } from '@lane7/shared/server/getVenueBySlug';
 import { getClientSideURL } from '@lane7/shared/utilities/getURL';
 import RichText from '@lane7/shared/utilities/richText';
-import { Section } from '@lane7/ui/components/section';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';

@@ -8,8 +8,9 @@ import '../../globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Pasimedia - Cliente',
-  description: 'Sitio web desarrollado por Pasimedia'
+  title: 'Lane7 - Bowling, Pool & Karaoke Venues | London, Manchester, Berlin, Dublin',
+  description:
+    'Lane7 offers bowling, pool and karaoke in premium venues across London, Manchester, Berlin and Dublin. Perfect for corporate events, parties and team building.'
 };
 
 export default async function RootLayout({

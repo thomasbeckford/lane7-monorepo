@@ -1,6 +1,6 @@
 // components/Navbar.tsx - Server Component simple y lindo
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { Button } from '@lane7/ui/components/button';
+import { Button } from '@/components/ui/button';
 import { Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
 

@@ -2,38 +2,50 @@ import { DEFAULT_COUNTRY, getSupportedCountryKeys, isCountrySupported } from '@l
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 
-function getCountryCode(request: NextRequest): string {
-  const { country } = geolocation(request);
+// Cache supported countries to avoid repeated function calls
+const SUPPORTED_COUNTRIES = getSupportedCountryKeys();
 
-  if (!country) return DEFAULT_COUNTRY;
+function getCountryFromRequest(request: NextRequest): string {
+  try {
+    const { country } = geolocation(request);
 
-  const countryLower = country.toLowerCase();
-  return isCountrySupported(countryLower) ? countryLower : DEFAULT_COUNTRY;
+    if (!country) {
+      return DEFAULT_COUNTRY;
+    }
+
+    const countryLower = country.toLowerCase();
+    return isCountrySupported(countryLower) ? countryLower : DEFAULT_COUNTRY;
+  } catch (error) {
+    // Geolocation can fail in development or edge cases
+    console.warn('Geolocation failed, using default:', DEFAULT_COUNTRY);
+    return DEFAULT_COUNTRY;
+  }
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
-  // Check if URL already has a supported country code
-  const alreadyHasCountry = getSupportedCountryKeys().some(
-    country => pathname.startsWith(`/${country}/`) || pathname === `/${country}`
+  // Early exit: check if URL already has supported country prefix
+  const hasCountryPrefix = SUPPORTED_COUNTRIES.some(
+    country => pathname === `/${country}` || pathname.startsWith(`/${country}/`)
   );
 
-  if (alreadyHasCountry) {
+  if (hasCountryPrefix) {
     return NextResponse.next();
   }
 
   // Get country code and redirect
-  const countryCode = getCountryCode(request);
-  const url = request.nextUrl.clone();
-  url.pathname = `/${countryCode}${pathname}`;
+  const countryCode = getCountryFromRequest(request);
 
-  return NextResponse.redirect(url);
+  // Build redirect URL preserving query params
+  const redirectUrl = new URL(`/${countryCode}${pathname}${search}`, request.url);
+
+  return NextResponse.redirect(redirectUrl, 302);
 }
 
 export const config = {
   matcher: [
-    // Excluir archivos estáticos, API y rutas admin
-    '/((?!api|admin|_next/static|_next/image|favicon.ico|.*\\.).*)'
+    // Skip static files, API routes, and Next.js internals
+    '/((?!api|admin|_next|favicon.ico|robots.txt|sitemap.xml|.*\\.).*)'
   ]
 };

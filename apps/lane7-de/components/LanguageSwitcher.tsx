@@ -1,15 +1,15 @@
 'use client';
 
-import { locales } from '@lane7/shared/config/locales';
-import { Badge } from '@lane7/ui/components/badge';
-import { Button } from '@lane7/ui/components/button';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@lane7/ui/components/dropdown-menu';
-import { cn } from '@lane7/ui/lib/utils';
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { locales } from '@lane7/shared/config/locales';
 import { Check, ChevronDown, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';

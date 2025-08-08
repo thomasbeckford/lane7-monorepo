@@ -1,6 +1,6 @@
-import { Badge } from '@lane7/ui/components/badge';
-import { Button } from '@lane7/ui/components/button';
-import { Section, SectionDescription, SectionHeader, SectionTitle } from '@lane7/ui/components/section';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Section, SectionDescription, SectionHeader, SectionTitle } from '@/components/ui/section';
 
 import { ArrowRight, Calendar, Gift, MapPin, Star } from 'lucide-react';
 import Link from 'next/link';
