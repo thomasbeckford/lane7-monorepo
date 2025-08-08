@@ -23,7 +23,6 @@ export const metadata: Metadata = {
   }
 };
 
-// Structured Data para AI
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'EntertainmentBusiness',

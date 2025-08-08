@@ -1,5 +1,5 @@
 // collections/Venues.ts
-import { SUPPORTED_COUNTRIES } from '@lane7/shared/config/countries';
+import { getSupportedCountryKeys, SUPPORTED_COUNTRIES } from '@lane7/shared/config/countries';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { SlateToLexicalFeature } from '@payloadcms/richtext-lexical/migrate';
 import type { CollectionConfig } from 'payload';
@@ -40,9 +40,9 @@ export const Venues: CollectionConfig = {
       name: 'country',
       type: 'select',
       required: true,
-      options: Object.keys(SUPPORTED_COUNTRIES).map(code => ({
+      options: getSupportedCountryKeys().map(code => ({
         label: SUPPORTED_COUNTRIES[code].name + ' ' + SUPPORTED_COUNTRIES[code].flag,
-        value: code.toLowerCase() // ✅ Minúsculas: 'uk', 'de', etc.
+        value: code.toLowerCase()
       }))
     },
     {
@@ -54,7 +54,7 @@ export const Venues: CollectionConfig = {
           ([countryCode, country]) =>
             country.cities?.map(city => ({
               label: `${city} (${country.name})`,
-              value: `${countryCode.toLowerCase()}:${city}` // ✅ Ahora también en minúsculas
+              value: `${countryCode.toLowerCase()}:${city}`
             })) || []
         )
       ],
@@ -68,7 +68,7 @@ export const Venues: CollectionConfig = {
             typeof option === 'object' &&
             'value' in option &&
             typeof option.value === 'string' &&
-            option.value.startsWith(`${data.country}:`) // ✅ Ahora coincide: 'uk:London'
+            option.value.startsWith(`${data.country}:`)
         );
       }
     },
