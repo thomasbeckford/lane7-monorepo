@@ -3,8 +3,8 @@ export type SupportedCountry = {
   name: string;
   defaultLocale: string;
   flag: string;
-  ccTLD?: string;
   cities?: string[];
+  hasOwnDomain?: string;
 };
 
 export enum CountryCode {
@@ -25,7 +25,8 @@ export const SUPPORTED_COUNTRIES = {
     name: 'Germany',
     defaultLocale: 'de',
     flag: '🇩🇪',
-    cities: ['Berlin', 'Hamburg', 'Munich']
+    cities: ['Berlin', 'Hamburg', 'Munich'],
+    hasOwnDomain: 'http://localhost:3001'
   },
   [CountryCode.IE]: {
     name: 'Ireland',

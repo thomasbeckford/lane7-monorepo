@@ -1,4 +1,9 @@
-import { DEFAULT_COUNTRY, getSupportedCountryKeys, isCountrySupported } from '@lane7/shared/config/countries';
+import {
+  DEFAULT_COUNTRY,
+  getCountryData,
+  getSupportedCountryKeys,
+  isCountrySupported
+} from '@lane7/shared/config/countries';
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -29,6 +34,14 @@ export function middleware(request: NextRequest) {
   const hasCountryPrefix = SUPPORTED_COUNTRIES.some(
     country => pathname === `/${country}` || pathname.startsWith(`/${country}/`)
   );
+
+  // Si el country tiene ownDomain, entonces que redirija
+  if (hasCountryPrefix) {
+    const countryData = getCountryData(getCountryFromRequest(request));
+    if (countryData?.hasOwnDomain) {
+      return NextResponse.redirect(new URL(countryData.hasOwnDomain, request.url), 302);
+    }
+  }
 
   if (hasCountryPrefix) {
     return NextResponse.next();

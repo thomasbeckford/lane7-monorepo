@@ -1,6 +1,6 @@
 'use client';
 
-import { useNearestLocations } from '@/components/nearest-location/useNearestLocations';
+import { useNearestLocations } from '@/components/custom/nearest-location/useNearestLocations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, MapPin, Navigation2 } from 'lucide-react';
